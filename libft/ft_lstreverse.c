@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_dlist_head.c                                    :+:      :+:    :+:   */
+/*   ft_lstreverse.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msoudan <msoudan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/12/26 14:01:19 by msoudan           #+#    #+#             */
-/*   Updated: 2016/06/08 19:57:36 by msoudan          ###   ########.fr       */
+/*   Created: 2016/06/08 15:45:24 by msoudan           #+#    #+#             */
+/*   Updated: 2016/06/12 17:12:11 by msoudan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int			ft_dlist_head(t_dlist **list, void *data, size_t size)
+static t_list	*ft_lstreverse_core(t_list *data, t_list *next)
 {
-	t_dbl	*new;
+	t_list		*tmp;
 
-	if (*list == NULL && (*list = ft_dlist_new()) == NULL)
-		return (-1);
-	if ((new = ft_new_node(data, size)) != NULL)
-	{
-		if ((*list)->head != NULL)
-			(*list)->head->prev = new;
-		new->next = (*list)->head;
-		(*list)->tail = ((*list)->tail == NULL) ? new : (*list)->tail;
-		(*list)->head = new;
-		(*list)->lenght++;
-		return (0);
-	}
-	return (-1);
+	if (next == NULL)
+		return (data);
+	tmp = next->next;
+	next->next = data;
+	if ((void *)data->next == (void *)next)
+		data->next = NULL;
+	if (tmp != NULL)
+		return (ft_lstreverse_core(next, tmp));
+	return (next);
+}
+
+t_list			*ft_lstreverse(t_list *data)
+{
+	return (ft_lstreverse_core(data, data->next));
 }
